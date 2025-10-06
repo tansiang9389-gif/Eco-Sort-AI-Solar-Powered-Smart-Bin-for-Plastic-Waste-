@@ -1,0 +1,5 @@
+train: C:\Users\tansi\Downloads\archive\Plastic types
+val: C:\Users\tansi\Downloads\archive\Plastic types
+
+nc: 6
+names: ['PET', 'PS', 'PE', 'PP', 'PC', 'Others']
