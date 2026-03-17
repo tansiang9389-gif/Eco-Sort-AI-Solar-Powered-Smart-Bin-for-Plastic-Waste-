@@ -290,7 +290,8 @@ def analyse_confusion_matrix(eval_dir: str, class_names: list[str]) -> None:
     cm_norm  = np.where(row_sums > 0, cm / row_sums, 0)
 
     print("\n  CONFUSION MATRIX ANALYSIS (normalised by true class)")
-    print(f"  {'True \\ Pred':<14}", end="")
+    header = "True \\ Pred"
+    print(f"  {header:<14}", end="")
     all_names = (class_names or [str(i) for i in range(n - 1)]) + ["background"]
     for name in all_names[:n]:
         print(f" {name[:8]:>8}", end="")
