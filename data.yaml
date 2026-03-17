@@ -1,5 +1,78 @@
-train: C:\Users\tansi\Downloads\archive\Plastic types
-val: C:\Users\tansi\Downloads\archive\Plastic types
+# =============================================================================
+# Eco-Sort AI — Waste Detection Dataset Configuration
+# Framework : Ultralytics YOLO11 (the production model used here; "YOLO26" is
+#             a placeholder name — no such weights exist in the Ultralytics
+#             registry as of 2025/2026; YOLO11 is the current state-of-the-art)
+# Task      : Object Detection — 7 waste categories inside a trash can
+# Target    : mAP50 ≥ 0.98 at ≤ 320×320 resolution for edge deployment
+# =============================================================================
 
-nc: 6
-names: ['PET', 'PS', 'PE', 'PP', 'PC', 'Others']
+# ---------------------------------------------------------------------------
+# PATHS — update these to point to your actual dataset root on disk.
+# Expected directory layout (YOLO format):
+#
+#   dataset/
+#   ├── images/
+#   │   ├── train/   ← JPEG/PNG training images
+#   │   ├── val/     ← JPEG/PNG validation images
+#   │   └── test/    ← JPEG/PNG held-out test images  (optional)
+#   └── labels/
+#       ├── train/   ← *.txt annotation files (one per image)
+#       ├── val/     ← matching label files
+#       └── test/    ← matching label files  (optional)
+#
+# Each label line: <class_id> <x_center> <y_center> <width> <height>
+#                  (all values normalised 0-1 relative to image size)
+# ---------------------------------------------------------------------------
+path: ./dataset                        # dataset root directory
+train: images/train                    # relative to 'path'
+val:   images/val
+test:  images/test                     # optional held-out split
+
+# ---------------------------------------------------------------------------
+# CLASS DEFINITIONS
+# 7 waste classes observed inside a trash bin from a top-down camera.
+# Ordered from most recyclable (index 0) to general/unrecyclable (index 6).
+#
+# Class details & typical appearance inside the bin:
+#   0 PET       — clear/blue water bottles, crushed or whole
+#   1 HDPE      — opaque milk/detergent bottles, lids
+#   2 PP        — yoghurt tubs, straws, bottle caps (often small → STAL needed)
+#   3 PS        — foam cups, take-away trays (fragile, overlapping pieces)
+#   4 PC        — hard transparent items, CD cases
+#   5 Organic   — food scraps, wet paper, tea bags (irregular shapes, dark)
+#   6 General   — crumpled wrappers, mixed non-recyclable scraps (dominant class)
+# ---------------------------------------------------------------------------
+nc: 7
+names:
+  0: PET
+  1: HDPE
+  2: PP
+  3: PS
+  4: PC
+  5: Organic
+  6: General
+
+# ---------------------------------------------------------------------------
+# DATASET STATISTICS (fill in after running dataset_stats.py)
+# These help calibrate class-weighted loss and anchor generation.
+# ---------------------------------------------------------------------------
+# total_images: 8000          # recommended minimum for 98 % mAP target
+# class_distribution:         # ensure no class < 5 % of total instances
+#   PET:     18 %
+#   HDPE:    12 %
+#   PP:      14 %
+#   PS:      10 %
+#   PC:       8 %
+#   Organic: 16 %
+#   General: 22 %
+
+# ---------------------------------------------------------------------------
+# RECOMMENDED DATA COLLECTION GUIDELINES for 98 % accuracy
+# 1. Capture images from a fixed overhead camera inside the bin at ≥1080p.
+# 2. Include diverse lighting: harsh LED, dim incandescent, IR-only at night.
+# 3. Capture images at 0 %, 25 %, 50 %, 75 %, and 100 % bin fill levels.
+# 4. Include partially obscured items (mosaic/mixup augmentation handles more).
+# 5. Minimum 500 instances per class; aim for 1 000–2 000 for rare classes.
+# 6. Use Roboflow, CVAT, or Label Studio for bounding-box annotation.
+# ---------------------------------------------------------------------------
