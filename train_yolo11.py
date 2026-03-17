@@ -34,7 +34,7 @@ Usage:
     python train_yolo11.py --model yolo11n --epochs 2 --device cpu
 
     # Full production training on GPU:
-    python train_yolo11.py --model yolo11n --epochs 300 --device 0
+    python train_yolo11.py --model yolo11n --epochs 100 --device 0
 
     # Multi-GPU:
     python train_yolo11.py --model yolo11s --device 0,1
@@ -81,7 +81,7 @@ DEFAULT_CONFIG = {
     "imgsz":       640,                # training resolution; export at 320
 
     # ── Training schedule ─────────────────────────────────────────────────────
-    "epochs":      300,                # 300 is standard; use early-stop below
+    "epochs":      100,                # 100 epochs; use early-stop below
     "patience":    50,                 # stop if no improvement for N epochs
     "batch":       16,                 # reduce to 8 if VRAM < 6 GB
 
@@ -367,7 +367,8 @@ def parse_args() -> argparse.Namespace:
                    help="YOLO11 model variant")
     p.add_argument("--data",    default=DEFAULT_CONFIG["data"],
                    help="Path to data.yaml")
-    p.add_argument("--epochs",  default=DEFAULT_CONFIG["epochs"],  type=int)
+    p.add_argument("--epochs",  default=DEFAULT_CONFIG["epochs"],  type=int,
+                   help="Number of training epochs (default: 100)")
     p.add_argument("--batch",   default=DEFAULT_CONFIG["batch"],   type=int)
     p.add_argument("--imgsz",   default=DEFAULT_CONFIG["imgsz"],   type=int)
     p.add_argument("--device",  default=DEFAULT_CONFIG["device"],
